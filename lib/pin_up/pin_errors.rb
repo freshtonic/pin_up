@@ -14,17 +14,17 @@ module Pin
     def self.handle_error(http_status, response)
       case http_status
       when 400
-        raise(Pin::ChargeError, "#{response['error']}: #{response['error_description']}. Charge token: #{response['charge_token']}")
+        raise(Pin::ChargeError, "#{response['error']}: #{response['error_description']}. Charge token: #{response['charge_token']}", 400)
       when 402
-        raise(Pin::InsufficientPinBalance, "#{response['error_description']}")
+        raise(Pin::InsufficientPinBalance, "#{response['error_description']}", 402)
       when 404
-        raise(Pin::ResourceNotFound, "#{response['error_description']}")
+        raise(Pin::ResourceNotFound, "#{response['error_description']}", 404)
       when 422
         message = ""
         response['messages'].each do |m|
           message += "#{m['code']}: #{m['message']}"
         end
-        raise(Pin::InvalidResource, message)
+        raise(Pin::InvalidResource, message, 422)
       end
     end
   end
